@@ -6,7 +6,7 @@ const resolveApiBaseUrl = () => {
   }
 
   if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    return "http://localhost:5001";
+    return "https://pera-music-school.onrender.com";
   }
 
   return "";
