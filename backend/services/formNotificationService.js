@@ -2,8 +2,17 @@ import nodemailer from "nodemailer";
 
 let hasWarnedAboutMissingConfig = false;
 let cachedTransporter = null;
-const FORM_NOTIFICATION_TIMEOUT_MS = Number(
-  process.env.FORM_NOTIFICATION_TIMEOUT_MS || 8000
+const SMTP_CONNECTION_TIMEOUT_MS = Number(
+  process.env.SMTP_CONNECTION_TIMEOUT_MS || 30000
+);
+const SMTP_GREETING_TIMEOUT_MS = Number(
+  process.env.SMTP_GREETING_TIMEOUT_MS || 30000
+);
+const SMTP_SOCKET_TIMEOUT_MS = Number(
+  process.env.SMTP_SOCKET_TIMEOUT_MS || 60000
+);
+const FORM_NOTIFICATION_SEND_TIMEOUT_MS = Number(
+  process.env.FORM_NOTIFICATION_SEND_TIMEOUT_MS || 30000
 );
 
 function splitEmailList(value) {
@@ -54,9 +63,9 @@ function getMailTransporter() {
     host,
     port,
     secure: port === 465,
-    connectionTimeout: FORM_NOTIFICATION_TIMEOUT_MS,
-    greetingTimeout: FORM_NOTIFICATION_TIMEOUT_MS,
-    socketTimeout: FORM_NOTIFICATION_TIMEOUT_MS,
+    connectionTimeout: SMTP_CONNECTION_TIMEOUT_MS,
+    greetingTimeout: SMTP_GREETING_TIMEOUT_MS,
+    socketTimeout: SMTP_SOCKET_TIMEOUT_MS,
     auth: {
       user,
       pass,
@@ -208,10 +217,10 @@ async function sendFormNotificationEmail({
         timeoutId = setTimeout(() => {
           reject(
             new Error(
-              `Form notification timed out after ${FORM_NOTIFICATION_TIMEOUT_MS}ms.`
+              `Form notification timed out after ${FORM_NOTIFICATION_SEND_TIMEOUT_MS}ms.`
             )
           );
-        }, FORM_NOTIFICATION_TIMEOUT_MS);
+        }, FORM_NOTIFICATION_SEND_TIMEOUT_MS);
       }),
     ]);
   } finally {
