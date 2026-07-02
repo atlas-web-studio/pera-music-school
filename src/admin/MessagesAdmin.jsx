@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 import { getAdminApiErrorMessage } from "./adminApiError.js";
 
@@ -230,35 +230,70 @@ export default function MessagesAdmin({ inboxType = "work" }) {
   const config = inboxConfigs[inboxType] || inboxConfigs.work;
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [checkedIds, setCheckedIds] = useState([]);
   const [filter, setFilter] = useState("ALL");
   const [search, setSearch] = useState("");
+  const [lastUpdatedAt, setLastUpdatedAt] = useState("");
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      setIsLoading(true);
-      setLoadError("");
-      setActionError("");
-      setCheckedIds([]);
-      setSelectedId(null);
+  const fetchItems = useCallback(
+    async ({ showLoading = true, preserveSelection = false } = {}) => {
+      if (showLoading) {
+        setIsLoading(true);
+      } else {
+        setIsRefreshing(true);
+      }
 
       try {
         const res = await api.get(config.fetchUrl);
         setItems(res.data);
-        setSelectedId(res.data[0]?._id || null);
+        setLoadError("");
+        setActionError("");
+        setLastUpdatedAt(new Date().toISOString());
+
+        if (!preserveSelection) {
+          setCheckedIds([]);
+          setSelectedId(res.data[0]?._id || null);
+          return;
+        }
+
+        setCheckedIds((prev) =>
+          prev.filter((id) => res.data.some((item) => item._id === id))
+        );
+        setSelectedId((prev) =>
+          res.data.some((item) => item._id === prev) ? prev : res.data[0]?._id || null
+        );
       } catch (err) {
         console.error(err);
         setLoadError(getAdminApiErrorMessage(err, config.loadError));
       } finally {
-        setIsLoading(false);
+        if (showLoading) {
+          setIsLoading(false);
+        } else {
+          setIsRefreshing(false);
+        }
       }
-    };
+    },
+    [config]
+  );
 
-    fetchItems();
-  }, [config]);
+  useEffect(() => {
+    const initialFetchId = window.setTimeout(() => {
+      void fetchItems();
+    }, 0);
+
+    const intervalId = window.setInterval(() => {
+      void fetchItems({ showLoading: false, preserveSelection: true });
+    }, 15000);
+
+    return () => {
+      window.clearTimeout(initialFetchId);
+      window.clearInterval(intervalId);
+    };
+  }, [fetchItems]);
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
@@ -352,6 +387,11 @@ export default function MessagesAdmin({ inboxType = "work" }) {
             Switch between trial requests and teaching inquiries submitted through
             the public website.
           </p>
+          <p className="admin-inbox-status">
+            {lastUpdatedAt
+              ? `Last updated ${new Date(lastUpdatedAt).toLocaleTimeString()}. Auto-refreshes every 15 seconds.`
+              : "Auto-refreshes every 15 seconds."}
+          </p>
         </div>
       </div>
 
@@ -406,6 +446,12 @@ export default function MessagesAdmin({ inboxType = "work" }) {
         </select>
 
         <div className="admin-inbox-actions">
+          <button
+            onClick={() => fetchItems({ showLoading: false, preserveSelection: true })}
+            disabled={isLoading || isRefreshing}
+          >
+            {isRefreshing ? "Refreshing..." : "Refresh"}
+          </button>
           <button
             onClick={() => updateStatus(checkedIds, "READ")}
             disabled={isLoading || Boolean(loadError)}
