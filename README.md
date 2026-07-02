@@ -1,16 +1,49 @@
-# React + Vite
+# Pera Music School Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack website developed for Pera Music School.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React (Vite)
+- Node.js
+- Express
+- MongoDB
+- Cloudinary
+- Nodemailer
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Public website
+- Admin dashboard
+- Teacher management
+- Program management
+- Contact & Trial Session forms
+- Email notifications
+- Image uploads via Cloudinary
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+backend/
+frontend/
+```
+
+## Environment Variables
+
+Create a `.env` file in the backend with the required environment variables.
+
+## Development
+
+Backend:
+
+```bash
+npm install
+npm start
+```
+
+Frontend:
+
+```bash
+npm install
+npm run dev
+```
