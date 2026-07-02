@@ -2,6 +2,9 @@ import nodemailer from "nodemailer";
 
 let hasWarnedAboutMissingConfig = false;
 let cachedTransporter = null;
+const FORM_NOTIFICATION_TIMEOUT_MS = Number(
+  process.env.FORM_NOTIFICATION_TIMEOUT_MS || 8000
+);
 
 function splitEmailList(value) {
   if (!value || typeof value !== "string") {
@@ -51,6 +54,9 @@ function getMailTransporter() {
     host,
     port,
     secure: port === 465,
+    connectionTimeout: FORM_NOTIFICATION_TIMEOUT_MS,
+    greetingTimeout: FORM_NOTIFICATION_TIMEOUT_MS,
+    socketTimeout: FORM_NOTIFICATION_TIMEOUT_MS,
     auth: {
       user,
       pass,
@@ -172,7 +178,7 @@ async function sendFormNotificationEmail({
     return { sent: false, skipped: true };
   }
 
-  await transporter.sendMail({
+  const sendMailPromise = transporter.sendMail({
     from,
     to: getNotificationRecipients(),
     cc: splitEmailList(process.env.FORM_NOTIFICATION_CC_EMAILS || ""),
@@ -190,6 +196,29 @@ async function sendFormNotificationEmail({
       fields: filteredFields,
     }),
   });
+
+  sendMailPromise.catch(() => {});
+
+  let timeoutId = null;
+
+  try {
+    await Promise.race([
+      sendMailPromise,
+      new Promise((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(
+            new Error(
+              `Form notification timed out after ${FORM_NOTIFICATION_TIMEOUT_MS}ms.`
+            )
+          );
+        }, FORM_NOTIFICATION_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  }
 
   return { sent: true };
 }

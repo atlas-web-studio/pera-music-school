@@ -42,6 +42,23 @@ router.post("/", async (req, res) => {
       createdAt: new Date().toISOString(),
     };
 
+    if (application) {
+      void notifyWorkApplicationSubmitted(notificationPayload).catch(
+        (notificationError) => {
+          console.error(
+            "Work application notification email failed:",
+            notificationError
+          );
+        }
+      );
+
+      return res.status(201).json({
+        message: "Application submitted successfully.",
+        application,
+        storageMode,
+      });
+    }
+
     try {
       await notifyWorkApplicationSubmitted(notificationPayload);
     } catch (notificationError) {
@@ -50,20 +67,10 @@ router.post("/", async (req, res) => {
         notificationError
       );
 
-      if (!application) {
-        return res.status(503).json({
-          code: "DATABASE_UNAVAILABLE",
-          message:
-            "We could not receive your inquiry right now. Please try again shortly or email info@peramusicschool.com.",
-        });
-      }
-    }
-
-    if (application) {
-      return res.status(201).json({
-        message: "Application submitted successfully.",
-        application,
-        storageMode,
+      return res.status(503).json({
+        code: "DATABASE_UNAVAILABLE",
+        message:
+          "We could not receive your inquiry right now. Please try again shortly or email info@peramusicschool.com.",
       });
     }
 

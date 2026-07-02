@@ -107,6 +107,23 @@ router.post("/", async (req, res) => {
       createdAt: new Date().toISOString(),
     };
 
+    if (trialSessionRequest) {
+      void notifyTrialSessionSubmitted(notificationPayload).catch(
+        (notificationError) => {
+          console.error(
+            "Trial session notification email failed:",
+            notificationError
+          );
+        }
+      );
+
+      return res.status(201).json({
+        message: "Trial session request submitted successfully.",
+        trialSessionRequest,
+        storageMode,
+      });
+    }
+
     try {
       await notifyTrialSessionSubmitted(notificationPayload);
     } catch (notificationError) {
@@ -115,20 +132,10 @@ router.post("/", async (req, res) => {
         notificationError
       );
 
-      if (!trialSessionRequest) {
-        return res.status(503).json({
-          code: "DATABASE_UNAVAILABLE",
-          message:
-            "We could not receive your trial request right now. Please try again shortly or email info@peramusicschool.com.",
-        });
-      }
-    }
-
-    if (trialSessionRequest) {
-      return res.status(201).json({
-        message: "Trial session request submitted successfully.",
-        trialSessionRequest,
-        storageMode,
+      return res.status(503).json({
+        code: "DATABASE_UNAVAILABLE",
+        message:
+          "We could not receive your trial request right now. Please try again shortly or email info@peramusicschool.com.",
       });
     }
 
