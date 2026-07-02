@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Pera Music School favicon">
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path
+      d="M98 190V74"
+      stroke="#bb5a70"
+      stroke-width="16"
+    />
+    <path
+      d="M98 112c-28 0-50 22-50 50s22 50 50 50c34 0 62-28 62-62 0-24-11-47-29-62"
+      stroke="#bb5a70"
+      stroke-width="14"
+    />
+    <circle cx="98" cy="208" r="18" fill="#bb5a70" stroke="#bb5a70" />
+    <circle cx="116" cy="74" r="16" fill="#8a6e2b" stroke="#8a6e2b" />
+    <path
+      d="M128 48h-20c-14 0-25 11-25 25 0 10 8 18 18 18 10 0 18-8 18-18V48"
+      stroke="#8a6e2b"
+      stroke-width="14"
+    />
+    <path
+      d="M126 48c14-8 34-7 58 6 24 13 41 34 51 63 16 47 6 96-26 131-14 15-30 27-50 35"
+      stroke="#8a6e2b"
+      stroke-width="14"
+    />
+    <circle cx="210" cy="94" r="8" fill="#8a6e2b" stroke="#8a6e2b" />
+    <circle cx="218" cy="132" r="8" fill="#8a6e2b" stroke="#8a6e2b" />
+  </g>
+</svg>

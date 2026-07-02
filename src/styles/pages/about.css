@@ -1,0 +1,125 @@
+@import "../shared/trinity.css";
+
+.about-intro-section h2 {
+  max-width: 980px;
+  margin-bottom: 22px;
+  font-size: clamp(2.55rem, 4.9vw, 4.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.about-story-flow {
+  display: grid;
+  gap: 26px;
+}
+
+.about-story-intro {
+  padding-bottom: 0;
+}
+
+.about-story-bridge {
+  max-width: 980px;
+  padding-top: 10px;
+  padding-left: 26px;
+  border-left: 1px solid rgba(138, 110, 43, 0.16);
+}
+
+.about-trinity-section {
+  padding-top: 8px;
+}
+
+.about-story-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.about-story-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 250, 244, 0.62);
+  box-shadow: var(--shadow);
+}
+
+.about-story-card h3 {
+  margin: 0 0 10px;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.about-story-card p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.about-story-card p:last-child {
+  margin-bottom: 0;
+}
+
+.about-story-card-wide {
+  grid-column: 1 / -1;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.about-story-card-wide p {
+  max-width: 900px;
+  font-size: 1.06rem;
+  line-height: 1.92;
+  color: #625b53;
+}
+
+.about-story-bridge .section-kicker {
+  margin-bottom: 14px;
+  font-size: 0.76rem;
+  letter-spacing: 0.18em;
+  color: var(--olive);
+}
+
+.about-trinity-panel {
+  max-width: 1180px;
+}
+
+.trinity-list {
+  margin: 0 0 18px;
+  padding-left: 20px;
+  color: #615b55;
+  line-height: 1.72;
+}
+
+.trinity-list li + li {
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .about-story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-story-bridge {
+    padding-left: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-story-bridge {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .about-story-card-wide p {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .trinity-list {
+    padding-left: 18px;
+  }
+}

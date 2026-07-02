@@ -1,0 +1,54 @@
+@import "../shared/contact-layout.css";
+
+.contact-overview-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.form-embed-shell {
+  overflow: hidden;
+  min-height: 560px;
+  border-radius: 18px;
+  background: transparent;
+}
+
+.form-embed {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 560px;
+  margin: 0;
+  border: 0;
+}
+
+@media (max-width: 1100px) {
+  .contact-overview-grid {
+    grid-template-columns: 1fr;
+    padding-inline: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .contact-overview-grid {
+    padding: 0 18px 56px;
+  }
+
+  .form-embed-shell,
+  .form-embed {
+    min-height: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-embed-shell,
+  .form-embed {
+    min-height: 540px;
+    height: 540px;
+  }
+}

@@ -1,0 +1,139 @@
+.footer {
+  margin-top: 80px;
+  padding: 24px 24px 18px;
+  border-top: 1px solid #e8dfd3;
+  background: #f8f4ee;
+}
+
+.footer-main {
+  max-width: 1060px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 48px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.footer-logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.footer-brandText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.footer-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #3f3a34;
+  text-align: left;
+}
+
+.footer-subtitle {
+  margin: 6px 0 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  color: #7a6d5f;
+  text-align: left;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 18px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-socials a {
+  font-size: 0.92rem;
+  color: #7a746c;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-socials a:hover {
+  color: #a88443;
+}
+
+.footer-info {
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  text-align: right;
+}
+
+.footer-info p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: #6f685f;
+}
+
+.footer-bottom {
+  max-width: 1060px;
+  margin: 18px auto 0;
+  padding-top: 14px;
+  border-top: 1px solid #ece3d8;
+  text-align: center;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #8a837a;
+  line-height: 1.7;
+}
+
+.footer-bottom a {
+  color: #7b6a43;
+  text-decoration: none;
+}
+
+.footer-bottom a:hover {
+  color: #a88443;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    margin-top: 64px;
+    padding: 20px 18px 18px;
+  }
+
+  .footer-main {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .footer-info {
+    align-items: flex-start;
+    text-align: left;
+    min-width: unset;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-brand {
+    align-items: center;
+  }
+}

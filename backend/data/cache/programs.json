@@ -1,0 +1,128 @@
+{
+  "found": true,
+  "items": [
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c67",
+      "title": "Piano",
+      "description": "Build a strong musical foundation through piano lessons that focus on technique, expression, and\nmusical understanding across all levels and styles. Students are also guided through Trinity\nCollege London graded piano exams, supporting the development of a well-rounded musical\nportfolio.",
+      "imageUrl": "https://images.pexels.com/photos/7714180/pexels-photo-7714180.jpeg",
+      "order": 0,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:16:16.359Z",
+      "level": "Beginner to advanced",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c68",
+      "title": "Voice",
+      "description": "Develop vocal technique, control, and confidence through personalized voice training tailored to\neach student. Our program also offers preparation for Trinity College London vocal exams,\nhelping students showcase their progress and build a strong performance portfolio.",
+      "imageUrl": "https://images.pexels.com/photos/7521312/pexels-photo-7521312.jpeg",
+      "order": 1,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:17:23.310Z",
+      "level": "Ages 8+",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c69",
+      "title": "Guitar",
+      "description": "Explore acoustic and electric guitar through engaging lessons that cover technique, chords, and\ndiverse musical styles. Students have the opportunity to prepare for Trinity College London\nguitar exams, enhancing their musical journey with recognized certifications.",
+      "imageUrl": "https://images.pexels.com/photos/8190773/pexels-photo-8190773.jpeg",
+      "order": 2,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:17:42.251Z",
+      "level": "Acoustic and electric",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c6a",
+      "title": "Ukulele Lessons",
+      "description": "Our ukulele lessons are designed for students who want to build a strong musical\nfoundation in a fun, approachable, and engaging way. Students learn proper technique,\nchords, rhythm, strumming patterns, music reading basics, and performance skills while\nexploring a variety of songs and styles.",
+      "imageUrl": "https://images.pexels.com/photos/346709/pexels-photo-346709.jpeg",
+      "order": 3,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:18:15.206Z",
+      "level": "Beginner friendly",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c6b",
+      "title": "Violin and Viola",
+      "description": "Learn proper technique, tone production, and expressive playing in a structured and supportive\nenvironment. Our violin program includes preparation for Trinity College London graded exams,\nallowing students to build both skill and formal credentials.",
+      "imageUrl": "https://images.pexels.com/photos/8471823/pexels-photo-8471823.jpeg",
+      "order": 4,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:18:35.514Z",
+      "level": "Children and teens",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c6c",
+      "title": "Cello",
+      "description": "Discover the depth and richness of the cello while developing strong technical and musical\nfoundations. Students may also work toward Trinity College London cello exams, contributing to\na meaningful and recognized musical portfolio.",
+      "imageUrl": "https://images.pexels.com/photos/1314543/pexels-photo-1314543.jpeg",
+      "order": 5,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:18:53.478Z",
+      "level": "Developing and advanced",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c6d",
+      "title": "Drums",
+      "description": "Strengthen rhythm, coordination, and musicality through dynamic and engaging drum lessons.\nWe offer guidance for Trinity College London drum kit exams, helping students track their\nprogress and achieve formal recognition.",
+      "imageUrl": "https://images.pexels.com/photos/18649983/pexels-photo-18649983.jpeg",
+      "order": 6,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:19:20.075Z",
+      "level": "Rhythm and ensemble skills",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c6e",
+      "title": "Group Classes",
+      "description": "Our group classes are designed for maximum of four students with specialized attention\nto each student. These classes offer the option to learn together for groups of friends and\nfamilies whom also have the option to make their own group. These classes are available\nfor Guitar, Ukulele, Piano, Violin, and Early Music Education. If you are interested,\nplease contact us and we will do our best to accommodate your request.",
+      "imageUrl": "https://images.pexels.com/photos/7097459/pexels-photo-7097459.jpeg",
+      "order": 7,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:19:43.957Z",
+      "level": "Maximum of four students",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f8ecbf2ac7d390da5d1c6f",
+      "title": "Early Music Education",
+      "description": "Our early music education program welcomes young learners starting as early as 3.5 years old.\nThrough fun, interactive classes, students develop rhythm, listening, coordination, and a love for\nmusic in a nurturing environment. As they grow, we guide them toward instrument-based\nlearning and, when ready, introduce structured pathways such as Trinity College London\nprograms.",
+      "imageUrl": "https://images.pexels.com/photos/9644401/pexels-photo-9644401.jpeg",
+      "order": 8,
+      "isActive": true,
+      "updatedAt": "2026-05-12T20:20:03.663Z",
+      "level": "Starting from age 3.5",
+      "logo": "",
+      "tags": []
+    },
+    {
+      "_id": "69f9262e37d6848ac479e408",
+      "title": "Trinity College London Certification Program",
+      "description": "Pera Music School is proud to be an official Trinity College London examination center, offering students access to one of the world’s most renowned and internationally recognized assessment systems. Our programs are thoughtfully designed to integrate exam preparation seamlessly into each student’s musical journey, allowing them to develop both artistic excellence and academic distinction. As an accredited center, we offer Trinity College London Music Grades and Diplomas, as well as Drama and Music Theory qualifications. These globally respected certifications provide students with a distinguished musical portfolio, supporting their long-term academic and artistic aspirations.",
+      "imageUrl": "https://res.cloudinary.com/dkfifznie/image/upload/v1778769205/pera-music-school/elhbpdliaccphwpxxhee.png",
+      "order": 9,
+      "isActive": true,
+      "createdAt": "2026-05-04T23:05:18.417Z",
+      "updatedAt": "2026-05-14T14:33:26.376Z",
+      "__v": 0,
+      "level": "Registered Exam Centre",
+      "logo": "",
+      "tags": []
+    }
+  ],
+  "updatedAt": "2026-07-02T00:00:08.516Z"
+}

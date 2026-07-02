@@ -1,0 +1,109 @@
+@import "../shared/contact-layout.css";
+
+.section.work-with-us-intro {
+  padding-bottom: 0;
+}
+
+.section.work-with-us-content {
+  padding-top: 0;
+  margin-top: 12px;
+}
+
+.work-form-card {
+  width: min(100%, 640px);
+  margin: 0 auto;
+}
+
+.work-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 2px;
+  max-width: 640px;
+}
+
+.work-question-card {
+  padding: 22px 22px 18px;
+  border: 1px solid rgba(138, 110, 43, 0.16);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(43, 38, 35, 0.03);
+}
+
+.work-question-group {
+  margin: 0;
+}
+
+.work-question {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.work-question span {
+  color: #c4473d;
+}
+
+.work-form input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(138, 110, 43, 0.24);
+  border-radius: 0;
+  padding: 10px 0 8px;
+  font: inherit;
+  background: #fff;
+  color: var(--text);
+}
+
+.work-form input::placeholder {
+  color: #8c857f;
+}
+
+.work-form input:focus {
+  outline: none;
+  border-bottom-color: var(--green);
+}
+
+.work-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.work-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.work-checkbox-item input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: #677e63;
+}
+
+.work-form-note {
+  margin: 6px 0 0;
+  color: #6f655d;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.work-form-note a {
+  color: var(--olive);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+@media (max-width: 640px) {
+  .section.work-with-us-content {
+    margin-top: 8px;
+  }
+}
