@@ -4,6 +4,7 @@ import protectAdmin from "../middleware/protectAdmin.js";
 import requireDatabase from "../middleware/requireDatabase.js";
 import { notifyTrialSessionSubmitted } from "../services/formNotificationService.js";
 import { isDatabaseConnected } from "../config/db.js";
+import { formatTimeTo12Hour } from "../utils/time.js";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post("/", async (req, res) => {
       teacher,
       instrument,
       lessonLength,
-      lessonTime,
+      lessonTime: rawLessonTime,
       hasPreviousLessons,
       previousInstruments,
       previousLessonYears,
@@ -74,7 +75,7 @@ router.post("/", async (req, res) => {
       teacher,
       instrument,
       lessonLength,
-      lessonTime,
+      lessonTime: formatTimeTo12Hour(rawLessonTime),
       hasPreviousLessons,
       previousInstruments,
       previousLessonYears,

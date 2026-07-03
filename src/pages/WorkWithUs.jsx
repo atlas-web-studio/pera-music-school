@@ -1,19 +1,40 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/api";
 import "../styles/pages/work-with-us.css";
 
+const initialForm = {
+  fullName: "",
+  email: "",
+  phone: "",
+  instruments: [],
+};
+
 export default function WorkWithUs() {
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    instruments: [],
-  });
+  const [form, setForm] = useState(initialForm);
   const [statusMessage, setStatusMessage] = useState("");
+  const [statusType, setStatusType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (statusType !== "success" || !statusMessage) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setStatusMessage("");
+      setStatusType("");
+    }, 4000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [statusMessage, statusType]);
+
   const handleChange = (event) => {
+    if (statusMessage) {
+      setStatusMessage("");
+      setStatusType("");
+    }
+
     setForm((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
@@ -22,6 +43,11 @@ export default function WorkWithUs() {
 
   const handleInstrumentChange = (event) => {
     const { value, checked } = event.target;
+
+    if (statusMessage) {
+      setStatusMessage("");
+      setStatusType("");
+    }
 
     setForm((prev) => ({
       ...prev,
@@ -34,6 +60,7 @@ export default function WorkWithUs() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatusMessage("");
+    setStatusType("");
     setIsSubmitting(true);
 
     try {
@@ -42,17 +69,14 @@ export default function WorkWithUs() {
       setStatusMessage(
         response.data?.message || "Your inquiry has been submitted successfully."
       );
-      setForm({
-        fullName: "",
-        email: "",
-        phone: "",
-        instruments: [],
-      });
+      setStatusType("success");
+      setForm(initialForm);
     } catch (error) {
       console.error(error);
       setStatusMessage(
         error.response?.data?.message || "Something went wrong. Please try again."
       );
+      setStatusType("error");
     } finally {
       setIsSubmitting(false);
     }

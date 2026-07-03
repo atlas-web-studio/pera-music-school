@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { formatTimeTo12Hour } from "../utils/time.js";
 let hasWarnedAboutMissingConfig = false;
 let cachedTransporter = null;
 const SMTP_CONNECTION_TIMEOUT_MS = Number(
@@ -281,7 +282,7 @@ export function notifyTrialSessionSubmitted(request) {
       { label: "Trial date", value: request.trialDate },
       { label: "Teacher", value: request.teacher },
       { label: "Lesson length", value: request.lessonLength },
-      { label: "Lesson time", value: request.lessonTime },
+      { label: "Lesson time", value: formatTimeTo12Hour(request.lessonTime) },
       { label: "Date of birth", value: request.dateOfBirth },
       { label: "Age", value: request.studentAge },
       { label: "Grade", value: request.grade },

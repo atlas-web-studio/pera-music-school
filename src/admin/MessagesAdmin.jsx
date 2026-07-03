@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../api/api";
 import { getAdminApiErrorMessage } from "./adminApiError.js";
+import { formatTimeTo12Hour } from "../utils/time.js";
 
 const inboxConfigs = {
   work: {
@@ -178,7 +179,7 @@ function renderTrialDetails(item, formatDate, updateStatus, deleteItems) {
           {renderDetailField("Teacher", item.teacher)}
           {renderDetailField("Instrument", item.instrument)}
           {renderDetailField("Lesson length", item.lessonLength)}
-          {renderDetailField("Time", item.lessonTime)}
+          {renderDetailField("Time", formatTimeTo12Hour(item.lessonTime))}
         </div>
       ) : null}
 

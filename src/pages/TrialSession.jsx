@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "../api/api";
 import "../styles/pages/trial-session.css";
 
@@ -77,10 +77,29 @@ function ChoiceGroup({
 export default function TrialSession() {
   const [form, setForm] = useState(initialForm);
   const [statusMessage, setStatusMessage] = useState("");
+  const [statusType, setStatusType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (statusType !== "success" || !statusMessage) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setStatusMessage("");
+      setStatusType("");
+    }, 4000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [statusMessage, statusType]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    if (statusMessage) {
+      setStatusMessage("");
+      setStatusType("");
+    }
 
     setForm((prev) => ({
       ...prev,
@@ -90,6 +109,11 @@ export default function TrialSession() {
 
   const handleParticipationChange = (event) => {
     const { value, checked } = event.target;
+
+    if (statusMessage) {
+      setStatusMessage("");
+      setStatusType("");
+    }
 
     setForm((prev) => {
       if (value === "None") {
@@ -113,6 +137,7 @@ export default function TrialSession() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setStatusMessage("");
+    setStatusType("");
 
     setIsSubmitting(true);
 
@@ -122,12 +147,14 @@ export default function TrialSession() {
         response.data?.message ||
           "Your trial session request has been sent. The Pera team will be in touch soon."
       );
+      setStatusType("success");
       setForm(initialForm);
     } catch (error) {
       console.error(error);
       setStatusMessage(
         error.response?.data?.message || "Something went wrong. Please try again."
       );
+      setStatusType("error");
     } finally {
       setIsSubmitting(false);
     }
