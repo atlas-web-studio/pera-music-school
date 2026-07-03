@@ -15,6 +15,16 @@ const FORM_NOTIFICATION_SEND_TIMEOUT_MS = Number(
   process.env.FORM_NOTIFICATION_SEND_TIMEOUT_MS || 30000
 );
 
+function hasSmtpConfig() {
+  return Boolean(
+    process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS
+  );
+}
+
+function hasResendConfig() {
+  return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
+}
+
 function splitEmailList(value) {
   if (!value || typeof value !== "string") {
     return [];
@@ -38,10 +48,8 @@ function getNotificationRecipients() {
 
 export function isFormNotificationConfigured() {
   return Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_USER &&
-      process.env.SMTP_PASS &&
-      getNotificationRecipients().length > 0
+    getNotificationRecipients().length > 0 &&
+      (hasResendConfig() || hasSmtpConfig())
   );
 }
 
@@ -83,7 +91,16 @@ function warnMissingNotificationConfig() {
   hasWarnedAboutMissingConfig = true;
 
   console.warn(
-    "Form notification emails are disabled. Add SMTP_HOST, SMTP_USER, SMTP_PASS, and FORM_NOTIFICATION_TO_EMAILS (or ADMIN_EMAIL) to enable them."
+    "Form notification emails are disabled. Configure either RESEND_API_KEY + RESEND_FROM_EMAIL or SMTP_HOST + SMTP_USER + SMTP_PASS, plus FORM_NOTIFICATION_TO_EMAILS (or ADMIN_EMAIL)."
+  );
+}
+
+function getNotificationSender() {
+  return (
+    process.env.RESEND_FROM_EMAIL ||
+    process.env.FORM_NOTIFICATION_FROM_EMAIL ||
+    process.env.SMTP_USER ||
+    ""
   );
 }
 
@@ -178,32 +195,82 @@ async function sendFormNotificationEmail({
   }
 
   const filteredFields = filterFields(fields);
-  const transporter = getMailTransporter();
-  const from =
-    process.env.FORM_NOTIFICATION_FROM_EMAIL || process.env.SMTP_USER;
+  const from = getNotificationSender();
+  const to = getNotificationRecipients();
+  const cc = splitEmailList(process.env.FORM_NOTIFICATION_CC_EMAILS || "");
+  const bcc = splitEmailList(process.env.FORM_NOTIFICATION_BCC_EMAILS || "");
+  const html = buildHtmlEmail({
+    heading,
+    intro,
+    fields: filteredFields,
+  });
+  const text = buildTextEmail({
+    heading,
+    intro,
+    fields: filteredFields,
+  });
 
-  if (!transporter || !from) {
+  if (!from || to.length === 0) {
+    warnMissingNotificationConfig();
+    return { sent: false, skipped: true };
+  }
+
+  if (hasResendConfig()) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+      () => controller.abort("Form notification request timed out."),
+      FORM_NOTIFICATION_SEND_TIMEOUT_MS
+    );
+
+    try {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from,
+          to,
+          cc: cc.length > 0 ? cc : undefined,
+          bcc: bcc.length > 0 ? bcc : undefined,
+          reply_to: replyTo || undefined,
+          subject,
+          html,
+          text,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Resend request failed with status ${response.status}: ${errorText || "Unknown error"}`
+        );
+      }
+
+      return { sent: true, provider: "resend" };
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  const transporter = getMailTransporter();
+
+  if (!transporter) {
     warnMissingNotificationConfig();
     return { sent: false, skipped: true };
   }
 
   const sendMailPromise = transporter.sendMail({
     from,
-    to: getNotificationRecipients(),
-    cc: splitEmailList(process.env.FORM_NOTIFICATION_CC_EMAILS || ""),
-    bcc: splitEmailList(process.env.FORM_NOTIFICATION_BCC_EMAILS || ""),
+    to,
+    cc,
+    bcc,
     replyTo: replyTo || undefined,
     subject,
-    html: buildHtmlEmail({
-      heading,
-      intro,
-      fields: filteredFields,
-    }),
-    text: buildTextEmail({
-      heading,
-      intro,
-      fields: filteredFields,
-    }),
+    html,
+    text,
   });
 
   sendMailPromise.catch(() => {});
@@ -229,7 +296,7 @@ async function sendFormNotificationEmail({
     }
   }
 
-  return { sent: true };
+  return { sent: true, provider: "smtp" };
 }
 
 export function notifyWorkApplicationSubmitted(application) {
