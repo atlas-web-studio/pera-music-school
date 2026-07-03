@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
+const resend = new Resend(process.env.RESEND_API_KEY);
 let hasWarnedAboutMissingConfig = false;
 let cachedTransporter = null;
 const SMTP_CONNECTION_TIMEOUT_MS = Number(
@@ -262,16 +264,12 @@ async function sendFormNotificationEmail({
     return { sent: false, skipped: true };
   }
 
-  const sendMailPromise = transporter.sendMail({
-    from,
-    to,
-    cc,
-    bcc,
-    replyTo: replyTo || undefined,
-    subject,
-    html,
-    text,
-  });
+  const sendMailPromise = await resend.emails.send({
+  from: process.env.FORM_NOTIFICATION_FROM_EMAIL || "beyzamertan@gmail.com",
+  to: process.env.FORM_NOTIFICATION_TO_EMAILS.split(",").map((email) => email.trim()),
+  subject,
+  html,
+});
 
   sendMailPromise.catch(() => {});
 
