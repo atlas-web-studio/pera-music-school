@@ -264,12 +264,16 @@ async function sendFormNotificationEmail({
     return { sent: false, skipped: true };
   }
 
-  const sendMailPromise = await resend.emails.send({
-  from: process.env.FORM_NOTIFICATION_FROM_EMAIL || "beyzamertan@gmail.com",
-  to: process.env.FORM_NOTIFICATION_TO_EMAILS.split(",").map((email) => email.trim()),
-  subject,
-  html,
-});
+  const sendMailPromise = transporter.sendMail({
+    from,
+    to,
+    cc: cc.length > 0 ? cc : undefined,
+    bcc: bcc.length > 0 ? bcc : undefined,
+    replyTo: replyTo || undefined,
+    subject,
+    html,
+    text,
+  });
 
   sendMailPromise.catch(() => {});
 
