@@ -1,7 +1,4 @@
 import nodemailer from "nodemailer";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 let hasWarnedAboutMissingConfig = false;
 let cachedTransporter = null;
 const SMTP_CONNECTION_TIMEOUT_MS = Number(
@@ -21,10 +18,6 @@ function hasSmtpConfig() {
   return Boolean(
     process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS
   );
-}
-
-function hasResendConfig() {
-  return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
 }
 
 function splitEmailList(value) {
@@ -49,10 +42,7 @@ function getNotificationRecipients() {
 }
 
 export function isFormNotificationConfigured() {
-  return Boolean(
-    getNotificationRecipients().length > 0 &&
-      (hasResendConfig() || hasSmtpConfig())
-  );
+  return Boolean(getNotificationRecipients().length > 0 && hasSmtpConfig());
 }
 
 function getMailTransporter() {
@@ -93,13 +83,12 @@ function warnMissingNotificationConfig() {
   hasWarnedAboutMissingConfig = true;
 
   console.warn(
-    "Form notification emails are disabled. Configure either RESEND_API_KEY + RESEND_FROM_EMAIL or SMTP_HOST + SMTP_USER + SMTP_PASS, plus FORM_NOTIFICATION_TO_EMAILS (or ADMIN_EMAIL)."
+    "Form notification emails are disabled. Configure SMTP_HOST + SMTP_USER + SMTP_PASS, plus FORM_NOTIFICATION_TO_EMAILS (or ADMIN_EMAIL)."
   );
 }
 
 function getNotificationSender() {
   return (
-    process.env.RESEND_FROM_EMAIL ||
     process.env.FORM_NOTIFICATION_FROM_EMAIL ||
     process.env.SMTP_USER ||
     ""
@@ -215,46 +204,6 @@ async function sendFormNotificationEmail({
   if (!from || to.length === 0) {
     warnMissingNotificationConfig();
     return { sent: false, skipped: true };
-  }
-
-  if (hasResendConfig()) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(
-      () => controller.abort("Form notification request timed out."),
-      FORM_NOTIFICATION_SEND_TIMEOUT_MS
-    );
-
-    try {
-      const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from,
-          to,
-          cc: cc.length > 0 ? cc : undefined,
-          bcc: bcc.length > 0 ? bcc : undefined,
-          reply_to: replyTo || undefined,
-          subject,
-          html,
-          text,
-        }),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(
-          `Resend request failed with status ${response.status}: ${errorText || "Unknown error"}`
-        );
-      }
-
-      return { sent: true, provider: "resend" };
-    } finally {
-      clearTimeout(timeoutId);
-    }
   }
 
   const transporter = getMailTransporter();
