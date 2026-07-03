@@ -25,6 +25,17 @@ const participationOptions = [
   "None",
 ];
 
+const timeOptions = Array.from({ length: 56 }, (_, index) => {
+  const totalMinutes = (8 * 60) + (index * 15);
+  const hour24 = Math.floor(totalMinutes / 60);
+  const minute = totalMinutes % 60;
+  const period = hour24 >= 12 ? "PM" : "AM";
+  const hour12 = hour24 % 12 || 12;
+  const minuteLabel = String(minute).padStart(2, "0");
+
+  return `${hour12}:${minuteLabel} ${period}`;
+});
+
 const initialForm = {
   studentName: "",
   dateOfBirth: "",
@@ -345,12 +356,18 @@ export default function TrialSession() {
 
                 <label>
                   Time
-                  <input
-                    type="time"
+                  <select
                     name="lessonTime"
                     value={form.lessonTime}
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="">Select preferred time</option>
+                    {timeOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </label>
               </div>
             </div>
