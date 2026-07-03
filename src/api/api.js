@@ -7,7 +7,7 @@ const resolveApiBaseUrl = () => {
       hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 
     if (isLocalhost) {
-      return import.meta.env.VITE_API_URL || "https://pera-music-school.onrender.com";
+      return import.meta.env.VITE_API_URL || "";
     }
 
     return "";
