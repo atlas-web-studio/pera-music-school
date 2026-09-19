@@ -62,6 +62,8 @@ router.post("/", async (req, res) => {
     }
 
     const baseRequest = {
+      ipAddress: req.ip || "",
+      userAgent: req.get("user-agent") || "",
       studentName,
       dateOfBirth,
       studentAge,
