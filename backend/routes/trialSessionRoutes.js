@@ -8,16 +8,18 @@ import { formatTimeTo12Hour } from "../utils/time.js";
 
 const router = express.Router();
 
+function getClientIp(req) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+
+  if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  return req.ip || "";
+}
+
 router.post("/", async (req, res) => {
   try {
-
-    console.log("=== IP TEST ===");
-    console.log("req.ip:", req.ip);
-    console.log("x-forwarded-for:", req.headers["x-forwarded-for"]);
-    console.log("cf-connecting-ip:", req.headers["cf-connecting-ip"]);
-    console.log("x-real-ip:", req.headers["x-real-ip"]);
-    console.log("===============");
-    
     const {
       studentName,
       dateOfBirth,
@@ -70,7 +72,7 @@ router.post("/", async (req, res) => {
     }
 
     const baseRequest = {
-      ipAddress: req.ip || "",
+      ipAddress: getClientIp(req),
       userAgent: req.get("user-agent") || "",
       studentName,
       dateOfBirth,
