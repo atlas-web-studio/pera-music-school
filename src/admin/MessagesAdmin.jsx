@@ -89,6 +89,11 @@ function renderWorkDetails(item, formatDate, updateStatus, deleteItems) {
         <p>
           <strong>Received:</strong> {formatDate(item.createdAt)}
         </p>
+        {item.ipAddress ? (
+        <p>
+          <strong>IP Address:</strong> {item.ipAddress}
+        </p>
+      ) : null}
       </div>
 
       <div className="admin-detail-message">
@@ -170,6 +175,7 @@ function renderTrialDetails(item, formatDate, updateStatus, deleteItems) {
         {renderDetailField("Phone", item.phone)}
         {renderDetailField("Address", item.address)}
         {renderDetailField("Received", formatDate(item.createdAt))}
+        {renderDetailField("IP Address", item.ipAddress)}
       </div>
 
       {item.trialDate || item.teacher || item.instrument || item.lessonLength || item.lessonTime ? (
