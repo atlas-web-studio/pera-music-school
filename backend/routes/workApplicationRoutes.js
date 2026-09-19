@@ -22,6 +22,8 @@ router.post("/", async (req, res) => {
       email,
       phone,
       instruments,
+      ipAddress: req.ip || "",
+      userAgent: req.get("user-agent") || "",
     };
 
     let application = null;
