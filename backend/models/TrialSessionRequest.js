@@ -126,6 +126,16 @@ const trialSessionRequestSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+      ipAddress: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+      userAgent: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     status: {
       type: String,
       enum: ["NEW", "READ", "ARCHIVED"],
