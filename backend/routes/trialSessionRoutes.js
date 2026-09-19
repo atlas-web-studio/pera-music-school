@@ -10,6 +10,14 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
+
+    console.log("=== IP TEST ===");
+    console.log("req.ip:", req.ip);
+    console.log("x-forwarded-for:", req.headers["x-forwarded-for"]);
+    console.log("cf-connecting-ip:", req.headers["cf-connecting-ip"]);
+    console.log("x-real-ip:", req.headers["x-real-ip"]);
+    console.log("===============");
+    
     const {
       studentName,
       dateOfBirth,
