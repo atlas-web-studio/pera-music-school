@@ -7,6 +7,16 @@ import { isDatabaseConnected } from "../config/db.js";
 
 const router = express.Router();
 
+function getClientIp(req) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+
+  if (typeof forwardedFor === "string" && forwardedFor.length > 0) {
+    return forwardedFor.split(",")[0].trim();
+  }
+
+  return req.ip || "";
+}
+
 router.post("/", async (req, res) => {
   try {
     const { fullName, email, phone, instruments } = req.body;
@@ -22,7 +32,7 @@ router.post("/", async (req, res) => {
       email,
       phone,
       instruments,
-      ipAddress: req.ip || "",
+      ipAddress: getClientIp(req),
       userAgent: req.get("user-agent") || "",
     };
 
