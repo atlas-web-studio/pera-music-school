@@ -12,6 +12,7 @@ import programRoutes from "./routes/programRoutes.js";
 import adminAuthRoutes from "./routes/adminAuthRoutes.js";
 
 const app = express();
+app.set("trust proxy", 1);
 
 function splitOrigins(value) {
   if (!value || typeof value !== "string") {
