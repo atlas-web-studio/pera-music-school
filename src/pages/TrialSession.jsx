@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import api from "../api/api";
+import TurnstileWidget from "../components/TurnstileWidget";
 import "../styles/pages/trial-session.css";
+
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 const instrumentOptions = [
   "Piano",
@@ -90,6 +93,9 @@ export default function TrialSession() {
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef(null);
+  const isSubmittingRef = useRef(false);
 
   useEffect(() => {
     if (statusType !== "success" || !statusMessage) {
@@ -145,15 +151,46 @@ export default function TrialSession() {
     });
   };
 
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken("");
+    setStatusMessage(
+      "The security check could not be completed. Please try again."
+    );
+    setStatusType("error");
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+    setStatusMessage(
+      "The security check expired. Please complete it again before submitting."
+    );
+    setStatusType("error");
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (isSubmittingRef.current) {
+      return;
+    }
+
     setStatusMessage("");
     setStatusType("");
 
+    if (!turnstileToken) {
+      setStatusMessage("Please complete the security check before submitting.");
+      setStatusType("error");
+      return;
+    }
+
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
 
     try {
-      const response = await api.post("/api/trial-sessions", form);
+      const response = await api.post("/api/trial-sessions", {
+        ...form,
+        turnstileToken,
+      });
       setStatusMessage(
         response.data?.message ||
           "Your trial session request has been sent. The Pera team will be in touch soon."
@@ -167,6 +204,9 @@ export default function TrialSession() {
       );
       setStatusType("error");
     } finally {
+      isSubmittingRef.current = false;
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
       setIsSubmitting(false);
     }
   };
@@ -470,7 +510,20 @@ export default function TrialSession() {
               </p>
             </div>
 
-            <button type="submit" className="btn-primary" disabled={isSubmitting}>
+            <TurnstileWidget
+              ref={turnstileRef}
+              siteKey={turnstileSiteKey}
+              action="trial_session"
+              onTokenChange={setTurnstileToken}
+              onError={handleTurnstileError}
+              onExpire={handleTurnstileExpire}
+            />
+
+            <button
+              type="submit"
+              className="btn-primary"
+              disabled={isSubmitting || !turnstileToken}
+            >
               {isSubmitting ? "Sending..." : "Request Trial Session"}
             </button>
 

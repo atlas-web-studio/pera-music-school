@@ -1,0 +1,33 @@
+.turnstile-widget {
+  width: min(100%, 300px);
+  min-height: 65px;
+}
+
+.turnstile-widget > div {
+  max-width: 100%;
+}
+
+.turnstile-widget-error {
+  margin: 0;
+  color: #8b3a32;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.turnstile-widget-retry {
+  display: grid;
+  gap: 8px;
+}
+
+.turnstile-widget-retry button {
+  width: fit-content;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--olive);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}

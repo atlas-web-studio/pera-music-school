@@ -2,6 +2,7 @@ import express from "express";
 import TrialSessionRequest from "../models/TrialSessionRequest.js";
 import protectAdmin from "../middleware/protectAdmin.js";
 import requireDatabase from "../middleware/requireDatabase.js";
+import requireTurnstile from "../middleware/requireTurnstile.js";
 import { notifyTrialSessionSubmitted } from "../services/formNotificationService.js";
 import { isDatabaseConnected } from "../config/db.js";
 import { formatTimeTo12Hour } from "../utils/time.js";
@@ -18,7 +19,7 @@ function getClientIp(req) {
   return req.ip || "";
 }
 
-router.post("/", async (req, res) => {
+router.post("/", requireTurnstile("trial_session"), async (req, res) => {
   try {
     const {
       studentName,
@@ -138,7 +139,11 @@ router.post("/", async (req, res) => {
     }
 
     try {
-      await notifyTrialSessionSubmitted(notificationPayload);
+      const notification = await notifyTrialSessionSubmitted(notificationPayload);
+
+      if (!notification.sent) {
+        throw new Error("The trial request was not saved and email delivery is unavailable.");
+      }
     } catch (notificationError) {
       console.error(
         "Trial session notification email failed:",

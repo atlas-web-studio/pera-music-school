@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import api from "../api/api";
+import TurnstileWidget from "../components/TurnstileWidget";
 import "../styles/pages/work-with-us.css";
+
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 const initialForm = {
   fullName: "",
@@ -15,6 +18,9 @@ export default function WorkWithUs() {
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef(null);
+  const isSubmittingRef = useRef(false);
 
   useEffect(() => {
     if (statusType !== "success" || !statusMessage) {
@@ -57,14 +63,46 @@ export default function WorkWithUs() {
     }));
   };
 
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken("");
+    setStatusMessage(
+      "The security check could not be completed. Please try again."
+    );
+    setStatusType("error");
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+    setStatusMessage(
+      "The security check expired. Please complete it again before submitting."
+    );
+    setStatusType("error");
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (isSubmittingRef.current) {
+      return;
+    }
+
     setStatusMessage("");
     setStatusType("");
+
+    if (!turnstileToken) {
+      setStatusMessage("Please complete the security check before submitting.");
+      setStatusType("error");
+      return;
+    }
+
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
 
     try {
-      const response = await api.post("/api/work-applications", form);
+      const response = await api.post("/api/work-applications", {
+        ...form,
+        turnstileToken,
+      });
 
       setStatusMessage(
         response.data?.message || "Your inquiry has been submitted successfully."
@@ -78,6 +116,9 @@ export default function WorkWithUs() {
       );
       setStatusType("error");
     } finally {
+      isSubmittingRef.current = false;
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
       setIsSubmitting(false);
     }
   };
@@ -161,7 +202,20 @@ export default function WorkWithUs() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary" disabled={isSubmitting}>
+              <TurnstileWidget
+                ref={turnstileRef}
+                siteKey={turnstileSiteKey}
+                action="work_application"
+                onTokenChange={setTurnstileToken}
+                onError={handleTurnstileError}
+                onExpire={handleTurnstileExpire}
+              />
+
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={isSubmitting || !turnstileToken}
+              >
                 {isSubmitting ? "Sending..." : "Send Inquiry"}
               </button>
 

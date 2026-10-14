@@ -2,6 +2,7 @@ import express from "express";
 import WorkApplication from "../models/WorkApplication.js";
 import protectAdmin from "../middleware/protectAdmin.js";
 import requireDatabase from "../middleware/requireDatabase.js";
+import requireTurnstile from "../middleware/requireTurnstile.js";
 import { notifyWorkApplicationSubmitted } from "../services/formNotificationService.js";
 import { isDatabaseConnected } from "../config/db.js";
 
@@ -17,7 +18,7 @@ function getClientIp(req) {
   return req.ip || "";
 }
 
-router.post("/", async (req, res) => {
+router.post("/", requireTurnstile("work_application"), async (req, res) => {
   try {
     const { fullName, email, phone, instruments } = req.body;
 
@@ -72,7 +73,11 @@ router.post("/", async (req, res) => {
     }
 
     try {
-      await notifyWorkApplicationSubmitted(notificationPayload);
+      const notification = await notifyWorkApplicationSubmitted(notificationPayload);
+
+      if (!notification.sent) {
+        throw new Error("The inquiry was not saved and email delivery is unavailable.");
+      }
     } catch (notificationError) {
       console.error(
         "Work application notification email failed:",

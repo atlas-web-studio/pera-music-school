@@ -47,3 +47,8 @@ Frontend:
 npm install
 npm run dev
 ```
+
+## Release Checks
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for the Turnstile configuration, tested behavior
+and frontend/backend release order.
